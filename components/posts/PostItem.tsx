@@ -2,12 +2,12 @@ import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai';
 import { formatDistanceToNowStrict } from 'date-fns';
-
 import useLoginModal from '@/hooks/useLoginModal';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import useLike from '@/hooks/useLike';
-
+import useBookmark from '@/hooks/useBookmark';
 import Avatar from '../Avatar';
+import { BiBookmark, BiBookmarkAlt } from 'react-icons/bi';
 interface PostItemProps {
   data: Record<string, any>;
   userId?: string;
@@ -19,6 +19,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
 
   const { data: currentUser } = useCurrentUser();
   const { hasLiked, toggleLike } = useLike({ postId: data.id, userId});
+  const { hasBookmarked, toggleBookmark } = useBookmark({ postId: data.id, userId});
+
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
@@ -28,6 +30,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   const goToPost = useCallback(() => {
     router.push(`/posts/${data.id}`);
   }, [router, data.id]);
+
 
   const onLike = useCallback(async (ev: any) => {
     ev.stopPropagation();
@@ -40,6 +43,23 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   }, [loginModal, currentUser, toggleLike]);
 
   const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
+
+
+  const onBookmark = useCallback(async (ev: any) => {
+    ev.stopPropagation();
+
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+
+    toggleBookmark();
+  }, [loginModal, currentUser, toggleBookmark]);
+
+  const BookmarkIcon = hasBookmarked ? BiBookmarkAlt : BiBookmarkAlt;
+
+
+
+
 
   const createdAt = useMemo(() => {
     if (!data?.createdAt) {
@@ -126,6 +146,28 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 {data.likedIds.length}
               </p>
             </div>
+
+
+            <div
+              onClick={onBookmark}
+              className="
+                flex 
+                flex-row 
+                items-center 
+                text-neutral-500 
+                gap-2 
+                cursor-pointer 
+                transition 
+                hover:text-blue-500
+            ">
+              <BookmarkIcon color={hasBookmarked ? 'blue' : ''} size={20} />
+              <p>
+                {data.bookmarkedIds.length}
+              </p>
+            </div>
+
+
+
           </div>
         </div>
       </div>
