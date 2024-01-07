@@ -7,6 +7,7 @@ import LoginModal from '@/components/modals/LoginModal'
 import RegisterModal from '@/components/modals/RegisterModal'
 import '@/styles/globals.css'
 import EditModal from '@/components/modals/EditModal';
+import PostModal from '@/components/modals/PostModal';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -15,6 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <RegisterModal />
       <LoginModal />
       <EditModal />
+      <PostModal />
       <Layout>
         <Component {...pageProps} />
       </Layout>
