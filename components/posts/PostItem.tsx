@@ -4,6 +4,7 @@ import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai';
 import { formatDistanceToNowStrict } from 'date-fns';
 import useLoginModal from '@/hooks/useLoginModal';
 import useCurrentUser from '@/hooks/useCurrentUser';
+import { useState } from 'react';
 import useLike from '@/hooks/useLike';
 import useBookmark from '@/hooks/useBookmark';
 import useCitation from '@/hooks/useCitation';
@@ -26,6 +27,13 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   const { hasBookmarked, toggleBookmark } = useBookmark({ postId: data.id, userId});
   const { hasCited, toggleCitation } = useCitation({ postId: data.id, userId}); 
 
+
+  const commentsLength = data.comments.length || 0;
+  const likedLength = data.likedIds.length || 0;
+  const bookmarkedLength = data.bookmarkedIds.length || 0;
+  const citedLength = data.citedIds.length || 0;
+
+
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
     router.push(`/users/${data.user.id}`)
@@ -38,13 +46,15 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
 
   const onLike = useCallback(async (ev: any) => {
     ev.stopPropagation();
-
+  
     if (!currentUser) {
       return loginModal.onOpen();
     }
     toggleLike();
   }, [loginModal, currentUser, toggleLike]);
+  
 
+  console.log('hasliked', hasLiked)
   const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
 
   const onCite = useCallback(async (ev: any) => {
@@ -140,7 +150,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             ">
               <AiOutlineMessage size={20} />
               <p>
-                {data.comments?.length || 0}
+                {commentsLength}
               </p>
             </div>
 
@@ -158,7 +168,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             ">
               <CiteIcon color={hasCited ? 'blue' : ''} size={20} />
               <p>
-                {data.citedIds.length}
+                {citedLength}
               </p>
             </div>
 
@@ -176,11 +186,9 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             ">
               <LikeIcon color={hasLiked ? 'red' : ''} size={20} />
               <p>
-                {data.likedIds.length}
+                {likedLength}
               </p>
             </div>
-
-
             <div
               onClick={onBookmark}
               className="
@@ -195,12 +203,9 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             ">
               <BookmarkIcon color={hasBookmarked ? 'blue' : ''} size={20} />
               <p>
-                {data.bookmarkedIds.length}
+                {bookmarkedLength}
               </p>
             </div>
-
-
-
           </div>
         </div>
       </div>
