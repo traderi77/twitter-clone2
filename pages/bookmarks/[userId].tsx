@@ -21,8 +21,7 @@ const SettingsView = () => {
     else {
         return (
             <div className="flex flex-col">
-                <Header label='Bookmarks'>
-                </Header> 
+                <Header label='Bookmarks'/>
                 <PostFeed userId={userId as string} fetchBookmarked={true} fetchLiked={false}/>
             </div>
         )
