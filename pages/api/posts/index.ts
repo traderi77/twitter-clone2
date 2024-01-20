@@ -47,6 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             orderBy: {
               createdAt: 'desc'
             },
+            take: 6
           });
         } else if (fetchLiked === 'true') {
           // Fetch liked posts
@@ -63,6 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             orderBy: {
               createdAt: 'desc'
             },
+            take: 6
           });
         }
         else {
@@ -78,6 +80,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             orderBy: {
               createdAt: 'desc'
             },
+            take: 6
           });
         }
       }
@@ -91,6 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           orderBy: {
             createdAt: 'desc'
           },
+          take: 6
         });
       }
 
