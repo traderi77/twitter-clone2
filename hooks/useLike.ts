@@ -8,14 +8,20 @@ import usePost from "./usePost";
 import usePosts from "./usePosts";
 
 const useLike = ({ postId, userId }: { postId: string, userId?: string }) => {
+  console.log('useLike', postId, userId)
   const { data: currentUser } = useCurrentUser();
   const { data: fetchedPost, mutate: mutateFetchedPost } = usePost(postId);
   const { mutate: mutateFetchedPosts } = usePosts(userId);
+
+  console.log('useLike', fetchedPost)
+
 
   const loginModal = useLoginModal();
 
   const hasLiked = useMemo(() => {
     const list = fetchedPost?.likedIds || [];
+
+  
 
     return list.includes(currentUser?.id);
   }, [fetchedPost, currentUser]);

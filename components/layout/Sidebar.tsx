@@ -1,5 +1,5 @@
 import { signOut } from 'next-auth/react';
-import { BiLogOut } from 'react-icons/bi';
+import { BiLogOut, BiMessageDetail } from 'react-icons/bi';
 import { BsHouseFill, BsBellFill } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa';
 
@@ -31,6 +31,13 @@ const Sidebar = () => {
       href: `/users/${currentUser?.id}`,
       auth: true,
     },
+
+    {
+      icon: BiMessageDetail,
+      label: 'Messages',
+      href: `/messages/${currentUser?.id}`,
+      auth: true,
+    }
   ]
 
   return (
