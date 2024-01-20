@@ -6,8 +6,12 @@ import useLoginModal from '@/hooks/useLoginModal';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import useLike from '@/hooks/useLike';
 import useBookmark from '@/hooks/useBookmark';
+import useCitation from '@/hooks/useCitation';
+
 import Avatar from '../Avatar';
-import { BiBookmark, BiBookmarkAlt } from 'react-icons/bi';
+import { BiBookmark, BiRepost} from 'react-icons/bi';
+
+
 interface PostItemProps {
   data: Record<string, any>;
   userId?: string;
@@ -20,7 +24,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   const { data: currentUser } = useCurrentUser();
   const { hasLiked, toggleLike } = useLike({ postId: data.id, userId});
   const { hasBookmarked, toggleBookmark } = useBookmark({ postId: data.id, userId});
-
+  const { hasCited, toggleCitation } = useCitation({ postId: data.id, userId}); 
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
@@ -38,12 +42,21 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
     if (!currentUser) {
       return loginModal.onOpen();
     }
-
     toggleLike();
   }, [loginModal, currentUser, toggleLike]);
 
   const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
 
+  const onCite = useCallback(async (ev: any) => {
+    ev.stopPropagation();
+
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+    toggleCitation();
+  }, [loginModal, currentUser, toggleCitation]);
+
+  const CiteIcon = hasCited ? BiRepost : BiRepost;
 
   const onBookmark = useCallback(async (ev: any) => {
     ev.stopPropagation();
@@ -55,7 +68,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
     toggleBookmark();
   }, [loginModal, currentUser, toggleBookmark]);
 
-  const BookmarkIcon = hasBookmarked ? BiBookmarkAlt : BiBookmarkAlt;
+  const BookmarkIcon = hasBookmarked ? BiBookmark : BiBookmark;
 
 
 
@@ -114,6 +127,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
           </div>
           <div className="flex flex-row items-center mt-3 gap-10">
             <div 
+              onClick={goToPost}
               className="
                 flex 
                 flex-row 
@@ -129,6 +143,25 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 {data.comments?.length || 0}
               </p>
             </div>
+
+            <div
+              onClick={onCite}
+              className="
+                flex 
+                flex-row 
+                items-center 
+                text-neutral-500 
+                gap-2 
+                cursor-pointer 
+                transition 
+                hover:text-blue-500
+            ">
+              <CiteIcon color={hasCited ? 'blue' : ''} size={20} />
+              <p>
+                {data.citedIds.length}
+              </p>
+            </div>
+
             <div
               onClick={onLike}
               className="

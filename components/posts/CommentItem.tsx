@@ -7,7 +7,7 @@ import useCurrentUser from '@/hooks/useCurrentUser';
 import useLike from '@/hooks/useLike';
 import useBookmark from '@/hooks/useBookmark';
 import Avatar from '../Avatar';
-import { BiBookmark, BiBookmarkAlt } from 'react-icons/bi';
+import { BiBookmark } from 'react-icons/bi';
 
 
 interface CommentItemProps {
@@ -54,7 +54,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {}, userId }) => {
     toggleBookmark();
   }, [loginModal, currentUser, toggleBookmark]);
 
-  const BookmarkIcon = hasBookmarked ? BiBookmarkAlt : BiBookmarkAlt;
+  const BookmarkIcon = hasBookmarked ? BiBookmark : BiBookmark;
 
 
 
@@ -158,7 +158,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {}, userId }) => {
                 transition 
                 hover:text-blue-500
             ">
-              <BookmarkIcon color={hasBookmarked ? 'blue' : ''} size={20} />
+              <BiBookmark color={hasBookmarked ? 'blue' : ''} size={20} />
               <p>
                 {data.bookmarkedIds.length}
               </p>

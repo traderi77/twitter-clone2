@@ -16,20 +16,20 @@ const MessageView = () => {
       <div className="flex justify-center items-center h-full">
         <ClipLoader color="lightblue" size={80} />
       </div>
-    ) 
+    )
   }
   else {
-  return (
-    <div className="flex flex-col items-end">
-      <h1 className="text-white self-start"> These are my messages </h1>
+    return (
+      <div className="flex flex-col items-end">
+        <h1 className="text-white self-start"> These are my messages </h1>
 
-      <div className="end flex flex-row gap-4 h-5">
-        <AiOutlineSetting className="text-white" />
-        <BiMessageAdd className="text-white" />
+        <div className="end flex flex-row gap-4 h-5">
+          <AiOutlineSetting className="text-white" />
+          <BiMessageAdd className="text-white" />
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
 }
 
 
