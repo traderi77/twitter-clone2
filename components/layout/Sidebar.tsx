@@ -9,7 +9,6 @@ import SidebarItem from './SidebarItem';
 import SidebarLogo from './SidebarLogo';
 import SidebarTweetButton from './SidebarTweetButton';
 import { AiFillSetting } from 'react-icons/ai';
-import { Search, SearchCheck } from 'lucide-react';
 
 const Sidebar = () => {
   const { data: currentUser } = useCurrentUser();
