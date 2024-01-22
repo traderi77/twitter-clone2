@@ -1,6 +1,6 @@
 import { signOut } from 'next-auth/react';
 import { BiBookmark, BiLogOut, BiMessageDetail } from 'react-icons/bi';
-import { BsHouseFill, BsBellFill } from 'react-icons/bs';
+import { BsHouseFill, BsBellFill, BsSearch } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa';
 
 import useCurrentUser from '@/hooks/useCurrentUser';
@@ -18,6 +18,12 @@ const Sidebar = () => {
       icon: BsHouseFill,
       label: 'Home',
       href: '/',
+    },
+    {
+      icon: BsSearch,
+      label: 'Explore',
+      href: '/explore',
+      auth: true, 
     },
     {
       icon: BsBellFill,
