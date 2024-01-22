@@ -6,7 +6,7 @@ import TrendsBar from './layout/TrendsBar';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="h-max bg-black">
+    <div className="h-max min-h-screen bg-black">
       <div className="container h-full mx-auto xl:px-30 max-w-6xl bg-black">
         <div className="grid grid-cols-4 h-full bg-black">
           <Sidebar />
