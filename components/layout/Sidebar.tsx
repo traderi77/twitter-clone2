@@ -1,5 +1,5 @@
 import { signOut } from 'next-auth/react';
-import { BiBookmark, BiLogOut, BiMessageDetail } from 'react-icons/bi';
+import { BiBookmark, BiLogOut, BiMessageDetail, BiSearch } from 'react-icons/bi';
 import { BsHouseFill, BsBellFill, BsSearch } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa';
 
@@ -9,6 +9,7 @@ import SidebarItem from './SidebarItem';
 import SidebarLogo from './SidebarLogo';
 import SidebarTweetButton from './SidebarTweetButton';
 import { AiFillSetting } from 'react-icons/ai';
+import { Search, SearchCheck } from 'lucide-react';
 
 const Sidebar = () => {
   const { data: currentUser } = useCurrentUser();
@@ -20,7 +21,7 @@ const Sidebar = () => {
       href: '/',
     },
     {
-      icon: BsSearch,
+      icon: BiSearch,
       label: 'Explore',
       href: '/explore',
       auth: true, 

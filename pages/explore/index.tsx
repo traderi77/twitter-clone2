@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
 import { ClipLoader } from "react-spinners";
-import Input from "@/components/Input";
+import { Input } from "@/components/ui/input"
+
 import useUser from "@/hooks/useUser";
-import { AiOutlineSetting } from "react-icons/ai";
-import { BiMessageAdd } from "react-icons/bi";
-import { LucideFormInput } from "lucide-react";
 const MessageView = () => {
   const router = useRouter();
   const { userId } = router.query;
@@ -13,10 +11,9 @@ const MessageView = () => {
     return (
       <div className="flex flex-col">
         <div className="mt-5">
-          <LucideFormInput
-            className="w-full"   
-            size={20}
-            color="white"
+          <Input
+            className="w-full bg-black border-white border-2 rounded-lg pd-5 highlight-none text-white"   
+            placeholder="Search for people and groups"
           />
       </div>
       </div>
