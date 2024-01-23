@@ -23,7 +23,7 @@ import PostItemDots from './PostItemDots';
 
 interface PostItemProps {
   data: Record<string, any>;
-  userId: string;
+  userId?: string;
 }
 
 const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
