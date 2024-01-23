@@ -8,8 +8,7 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { BsMicMute } from "react-icons/bs";
-import { BsPersonAdd, BsPersonDash } from "react-icons/bs";
+import { BsMicMute, BsPersonCheck, BsPersonDashFill } from "react-icons/bs";
 import useFollow from "@/hooks/useFollow";
 
 interface PostItemProps {
@@ -36,7 +35,7 @@ const PostItemDots: React.FC<PostItemProps> = ({ data = {}, userId }) => {
 
                    {currentUser?.id !== userId && (
                         <div className='flex flex-row w-full gap-5' onClick={toggleFollow} >
-                            {isFollowing ? <BsPersonDash size={20}/> : <BsPersonAdd size={20}/> }
+                            {isFollowing ? <BsPersonDashFill size={20}/> : <BsPersonCheck size={20}/> }
                             <p>{isFollowing ? 'Unfollow' : 'Follow'} @{data.user.username}</p>
                         </div>
                     )}
