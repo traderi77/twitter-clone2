@@ -34,7 +34,7 @@ const PostItemDots: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                         className='text-neutral-500'
                         size={20} />
                 </HoverCardTrigger>
-                <HoverCardContent onClick={(event) => event.stopPropagation()} className="flex flex-row flex-wrap gap-5">
+                <HoverCardContent onClick={(event) => event.stopPropagation()} className="bg-black flex flex-row flex-wrap gap-5">
 
                    {currentUser?.id !== userId && (
                         <div className='flex flex-row w-full gap-5' onClick={toggleFollow} >
