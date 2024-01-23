@@ -8,6 +8,9 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
+
+
+
 import { BsMicMute, BsPersonCheck, BsPersonDashFill } from "react-icons/bs";
 import useFollow from "@/hooks/useFollow";
 
@@ -24,7 +27,7 @@ const PostItemDots: React.FC<PostItemProps> = ({ data = {}, userId }) => {
     
 
     return (
-        <div>
+        <div className="text-neutral-500">
             <HoverCard>
                 <HoverCardTrigger>
                     <BiDotsHorizontal
