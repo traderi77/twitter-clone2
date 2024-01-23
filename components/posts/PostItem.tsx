@@ -8,10 +8,9 @@ import { useState } from 'react';
 import useLike from '@/hooks/useLike';
 import useBookmark from '@/hooks/useBookmark';
 import useCitation from '@/hooks/useCitation';
+
 import Avatar from '../Avatar';
-import { BiBookmark, BiRepost, BiShare, BiShareAlt} from 'react-icons/bi';
-import { FaRetweet } from 'react-icons/fa';
-import usePost from '@/hooks/usePost';
+import { BiBookmark, BiRepost} from 'react-icons/bi';
 
 
 interface PostItemProps {
@@ -27,30 +26,22 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   const { hasLiked, toggleLike } = useLike({ postId: data.id, userId});
   const { hasBookmarked, toggleBookmark } = useBookmark({ postId: data.id, userId});
   const { hasCited, toggleCitation } = useCitation({ postId: data.id, userId}); 
-  const { data: citedPost } = usePost(data.citedId);
-  const displayData = (data.isCited === true && citedPost && citedPost.user) ? citedPost : data;
 
-  const commentsLength = displayData.comments.length || 0;
-  const likedLength = displayData.likedIds.length || 0;
-  const bookmarkedLength = displayData.bookmarkedIds.length || 0;
-  const citedLength = displayData.citedIds.length || 0;
+
+  const commentsLength = data.comments.length || 0;
+  const likedLength = data.likedIds.length || 0;
+  const bookmarkedLength = data.bookmarkedIds.length || 0;
+  const citedLength = data.citedIds.length || 0;
 
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
-    router.push(`/users/${displayData.user.id}`)
-  }, [router, displayData.user.id]);
-
-
-  const goToCitationUser = useCallback((ev: any) => {
-    ev.stopPropagation();
     router.push(`/users/${data.user.id}`)
   }, [router, data.user.id]);
 
-
   const goToPost = useCallback(() => {
-    router.push(`/posts/${displayData.id}`);
-  }, [router, displayData.id]);
+    router.push(`/posts/${data.id}`);
+  }, [router, data.id]);
 
 
   const onLike = useCallback(async (ev: any) => {
@@ -94,12 +85,12 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
 
 
   const createdAt = useMemo(() => {
-    if (!displayData?.createdAt) {
+    if (!data?.createdAt) {
       return null;
     }
 
-    return formatDistanceToNowStrict(new Date(displayData.createdAt));
-  }, [displayData.createdAt])
+    return formatDistanceToNowStrict(new Date(data.createdAt));
+  }, [data.createdAt])
 
   return (
     <div 
@@ -112,17 +103,10 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
         hover:bg-neutral-900 
         transition
       ">
-    {data.isCited === true && citedPost && citedPost.user && (
-      <div className="flex flex-row flex-wrap">
-        <span onClick={goToCitationUser} className="text-neutral-500 text-sm w-full flex flex-row gap-2 ml-10 hover:underline">
-          <FaRetweet/> {data.user.name} retweeted
-        </span>
-      </div>
-    )}        
-      <div className="flex flex-row items-start gap-3 w-full">
-        <Avatar userId={displayData.user.id} />
-        <div className='w-full'>
-          <div className="flex flex-row items-center gap-2 w-full">
+      <div className="flex flex-row items-start gap-3">
+        <Avatar userId={data.user.id} />
+        <div>
+          <div className="flex flex-row items-center gap-2">
             <p 
               onClick={goToUser} 
               className="
@@ -131,7 +115,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 cursor-pointer 
                 hover:underline
             ">
-              {displayData.user.name}
+              {data.user.name}
             </p>
             <span 
               onClick={goToUser} 
@@ -142,16 +126,16 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 hidden
                 md:block
             ">
-              @{displayData.user.username}
+              @{data.user.username}
             </span>
             <span className="text-neutral-500 text-sm">
               {createdAt}
             </span>
           </div>
-          <div className="text-white mt-1 w-full">
-            {displayData.body}
+          <div className="text-white mt-1">
+            {data.body}
           </div>
-          <div className="flex flex-row justify-between mt-3 gap-10">
+          <div className="flex flex-row items-center mt-3 gap-10">
             <div 
               onClick={goToPost}
               className="
@@ -222,22 +206,10 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 {bookmarkedLength}
               </p>
             </div>
-            <div className="
-                flex 
-                flex-row 
-                items-center 
-                text-neutral-500 
-                gap-2 
-                cursor-pointer 
-                transition 
-                hover:text-blue-500
-            ">
-              <BiShareAlt size={20} />
-            </div>
           </div>
         </div>
       </div>
-      </div> 
+    </div>
   )
 }
 

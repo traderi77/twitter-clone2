@@ -1,6 +1,6 @@
 import { signOut } from 'next-auth/react';
 import { BiBookmark, BiLogOut, BiMessageDetail, BiSearch } from 'react-icons/bi';
-import { BsHouseFill, BsBellFill, BsSearch } from 'react-icons/bs';
+import { BsHouseFill, BsBellFill } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa';
 
 import useCurrentUser from '@/hooks/useCurrentUser';

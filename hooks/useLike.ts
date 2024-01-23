@@ -1,24 +1,22 @@
 import axios from "axios";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import useCurrentUser from "./useCurrentUser";
 import useLoginModal from "./useLoginModal";
 import usePost from "./usePost";
-import usePosts from "./usePosts";
 
 const useLike = ({ postId, userId }: { postId: string, userId?: string }) => {
   const { data: currentUser } = useCurrentUser();
-  const { data: fetchedPost, mutate: mutateFetchedPost } = usePost(postId);
-  const { mutate: mutateFetchedPosts } = usePosts(userId);
-
+  const { data: fetchedPost } = usePost(postId);
   const loginModal = useLoginModal();
+  
+  const [hasLiked, setHasLiked] = useState<boolean | undefined>(undefined);
 
-  const hasLiked = useMemo(() => {
+  useEffect(() => {
     const list = fetchedPost?.likedIds || [];
-
-    return list.includes(currentUser?.id);
-  }, [fetchedPost, currentUser]);
+    setHasLiked(list.includes(currentUser?.id || ''));
+  }, [currentUser?.id, fetchedPost?.likedIds]);
 
   const toggleLike = useCallback(async () => {
     if (!currentUser) {
@@ -35,19 +33,17 @@ const useLike = ({ postId, userId }: { postId: string, userId?: string }) => {
       }
 
       await request();
-      mutateFetchedPost();
-      mutateFetchedPosts();
-
+      setHasLiked(prevHasLiked => !prevHasLiked); // Toggle the state after API call
       toast.success('Success');
     } catch (error) {
       toast.error('Something went wrong');
     }
-  }, [currentUser, hasLiked, postId, mutateFetchedPosts, mutateFetchedPost, loginModal]);
+  }, [currentUser, postId, loginModal, hasLiked]);
 
   return {
     hasLiked,
     toggleLike,
-  }
-}
+  };
+};
 
 export default useLike;
