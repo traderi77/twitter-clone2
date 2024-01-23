@@ -27,7 +27,7 @@ const PostItemDots: React.FC<PostItemProps> = ({ data = {}, userId }) => {
     
 
     return (
-        <div className="text-neutral-500">
+        <div className="text-neutral-500 bg-black">
             <HoverCard>
                 <HoverCardTrigger>
                     <BiDotsHorizontal

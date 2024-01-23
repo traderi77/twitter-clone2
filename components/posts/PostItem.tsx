@@ -253,11 +253,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             ">
               <BiShareAlt size={20} />
             </div>
-
-
-
               </HoverCardTrigger>
-              <HoverCardContent className="text-neutral-500">
+              <HoverCardContent className="text-neutral-500 bg-black">
                 <div onClick={(event) => event.preventDefault()} className="flex flex-row w-full">
                   <div onClick={copyLinkToPost} className='flex flex-row w-full gap-5' ><BiLink size={20} />
                   <p>Copy link to post</p>
