@@ -1,22 +1,27 @@
 import { BiBlock, BiDotsHorizontal, BiDotsVertical, BiFlag, BiLock } from "react-icons/bi"
 import { useRouter } from "next/router"
 import useLoginModal from "@/hooks/useLoginModal"
+import useCurrentUser from "@/hooks/useCurrentUser"
+import useUser from "@/hooks/useUser"
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { FaRegArrowAltCircleDown } from "react-icons/fa";
-import { BsMicMute, BsPersonAdd } from "react-icons/bs";
-import { AiFillAlert } from "react-icons/ai";
+import { BsMicMute, BsPersonAdd, BsPersonDash } from "react-icons/bs";
+import useFollow from "@/hooks/useFollow";
 
 interface PostItemProps {
     data: Record<string, any>;
-    userId?: string;
+    userId: string;
 }
 
 const PostItemDots: React.FC<PostItemProps> = ({ data = {}, userId }) => {
-    console.log(userId);
+    
+    const { data: currentUser } = useCurrentUser();
+    const { data: fetchedUser } = useUser(userId);
+    const { isFollowing, toggleFollow } = useFollow(userId);
+    
 
     return (
         <div>
@@ -26,11 +31,14 @@ const PostItemDots: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                         className='text-neutral-500'
                         size={20} />
                 </HoverCardTrigger>
-                <HoverCardContent className="flex flex-row flex-wrap gap-5">
+                <HoverCardContent onClick={(event) => event.stopPropagation()} className="flex flex-row flex-wrap gap-5">
 
-                    <div className='flex flex-row w-full gap-5' ><BsPersonAdd size={20} />
-                        <p>Follow @{data.user.username}</p>
-                    </div>
+                   {currentUser?.id !== userId && (
+                        <div className='flex flex-row w-full gap-5' onClick={toggleFollow} >
+                            {isFollowing ? <BsPersonDash size={20}/> : <BsPersonAdd size={20}/> }
+                            <p>{isFollowing ? 'Unfollow' : 'Follow'} @{data.user.username}</p>
+                        </div>
+                    )}
 
                     <div className='flex flex-row w-full gap-5' ><BsMicMute size={20} />
                         <p>Mute @{data.user.username}</p>

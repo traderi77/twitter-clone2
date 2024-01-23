@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import useUser from "@/hooks/useUser";
+import SearchBar from "@/components/SearchBar";
 const MessageView = () => {
   const router = useRouter();
   const { userId } = router.query;
@@ -8,7 +9,7 @@ const MessageView = () => {
     return (
       <div className="flex flex-col">
         <div className="mt-5">
-          Just some text
+          <SearchBar onSearch={(searchText: string) => console.log(searchText)}/>
         </div>
       </div>
     )

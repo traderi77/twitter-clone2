@@ -23,7 +23,7 @@ import PostItemDots from './PostItemDots';
 
 interface PostItemProps {
   data: Record<string, any>;
-  userId?: string;
+  userId: string;
 }
 
 const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
@@ -121,16 +121,13 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   return (
     <div 
       onClick={goToPost}
-      className="
-        border-b-[1px] 
-        border-neutral-800 
-        p-5 
-        cursor-pointer 
-        hover:bg-neutral-900 
-        transition
-      ">
+      className={data.isCited === true && citedPost && citedPost.user ? 
+        "border-b-[1px] border-neutral-800 p-5 pt-2 cursor-pointer hover:bg-neutral-900 transition"
+        :
+        " border-b-[1px] border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition"
+      }>
     {data.isCited === true && citedPost && citedPost.user && (
-      <div className="flex flex-row flex-wrap">
+      <div className="mt-0flex flex-row flex-wrap">
         <span onClick={goToCitationUser} className="text-neutral-500 text-sm w-full flex flex-row gap-2 ml-10 hover:underline">
           <FaRetweet/> {data.user.name} retweeted
         </span>
@@ -165,7 +162,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
               {createdAt}
             </span>
             <div className='ml-auto '>
-              <PostItemDots data={data} userId={userId} />
+              <PostItemDots data={displayData} userId={displayData.userId} />
             </div>
           </div>
           <div className="text-white mt-1 w-full">
