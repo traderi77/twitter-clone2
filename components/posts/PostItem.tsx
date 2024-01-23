@@ -17,6 +17,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import PostItemDots from './PostItemDots';
 
 
 
@@ -163,6 +164,9 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             <span className="text-neutral-500 text-sm">
               {createdAt}
             </span>
+            <div className='ml-auto '>
+              <PostItemDots data={data} userId={userId} />
+            </div>
           </div>
           <div className="text-white mt-1 w-full">
             {displayData.body}
