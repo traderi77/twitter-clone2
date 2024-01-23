@@ -8,7 +8,8 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { BsMicMute, BsPersonAdd, BsPersonDash } from "react-icons/bs";
+import { BsMicMute } from "react-icons/bs";
+import { BsPersonAdd, BsPersonDash } from "react-icons/bs";
 import useFollow from "@/hooks/useFollow";
 
 interface PostItemProps {
