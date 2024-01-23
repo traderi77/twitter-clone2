@@ -9,9 +9,15 @@ import useLike from '@/hooks/useLike';
 import useBookmark from '@/hooks/useBookmark';
 import useCitation from '@/hooks/useCitation';
 import Avatar from '../Avatar';
-import { BiBookmark, BiRepost, BiShare, BiShareAlt} from 'react-icons/bi';
+import { BiBookmark, BiLink, BiRepost, BiShare, BiShareAlt} from 'react-icons/bi';
 import { FaRetweet } from 'react-icons/fa';
 import usePost from '@/hooks/usePost';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
 
 
 interface PostItemProps {
@@ -35,6 +41,16 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   const bookmarkedLength = displayData.bookmarkedIds.length || 0;
   const citedLength = displayData.citedIds.length || 0;
 
+  const copyLinkToPost = useCallback((ev: any) => {
+    ev.stopPropagation();
+  
+    // Construct the post link
+    const postLink = `${window.location.origin}/posts/${displayData.id}`;
+  
+    // Copy the post link to the clipboard
+    navigator.clipboard.writeText(postLink);
+  }, [displayData.id]);
+  
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
@@ -222,7 +238,9 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 {bookmarkedLength}
               </p>
             </div>
-            <div className="
+            <HoverCard>
+              <HoverCardTrigger>
+              <div className="
                 flex 
                 flex-row 
                 items-center 
@@ -234,6 +252,20 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             ">
               <BiShareAlt size={20} />
             </div>
+
+
+
+              </HoverCardTrigger>
+              <HoverCardContent>
+                <div onClick={(event) => event.preventDefault()} className="flex flex-row w-full">
+                 
+                  <div onClick={copyLinkToPost} className='flex flex-row w-full gap-5' ><BiLink size={20} />
+                  <p>Copy link to post</p>
+                  </div>
+                </div>
+
+              </HoverCardContent>
+            </HoverCard>
           </div>
         </div>
       </div>
