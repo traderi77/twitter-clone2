@@ -27,7 +27,7 @@ const [searchText, setSearchText] = useState(defaultSearchText);
         }
     };
     return (
-            <div className='flex flex-row w-full justify-center'>
+            <div className='bg-black flex flex-row w-full justify-center'>
                 <HoverCard>
                 <HoverCardTrigger>
                     <Input 
