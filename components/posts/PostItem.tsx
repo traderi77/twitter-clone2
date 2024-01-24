@@ -4,12 +4,11 @@ import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai';
 import { formatDistanceToNowStrict } from 'date-fns';
 import useLoginModal from '@/hooks/useLoginModal';
 import useCurrentUser from '@/hooks/useCurrentUser';
-import { useState } from 'react';
 import useLike from '@/hooks/useLike';
 import useBookmark from '@/hooks/useBookmark';
 import useCitation from '@/hooks/useCitation';
 import Avatar from '../Avatar';
-import { BiBookmark, BiLink, BiRepost, BiShare, BiShareAlt} from 'react-icons/bi';
+import { BiBookmark, BiLink, BiRepost, BiShare, BiShareAlt } from 'react-icons/bi';
 import { FaRetweet } from 'react-icons/fa';
 import usePost from '@/hooks/usePost';
 import {
@@ -31,9 +30,9 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   const loginModal = useLoginModal();
 
   const { data: currentUser } = useCurrentUser();
-  const { hasLiked, toggleLike } = useLike({ postId: data.id, userId});
-  const { hasBookmarked, toggleBookmark } = useBookmark({ postId: data.id, userId});
-  const { hasCited, toggleCitation } = useCitation({ postId: data.id, userId}); 
+  const { hasLiked, toggleLike } = useLike({ postId: data.id, userId });
+  const { hasBookmarked, toggleBookmark } = useBookmark({ postId: data.id, userId });
+  const { hasCited, toggleCitation } = useCitation({ postId: data.id, userId });
   const { data: citedPost } = usePost(data.citedId);
   const displayData = (data.isCited === true && citedPost && citedPost.user) ? citedPost : data;
 
@@ -44,14 +43,14 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
 
   const copyLinkToPost = useCallback((ev: any) => {
     ev.stopPropagation();
-  
+
     // Construct the post link
     const postLink = `${window.location.origin}/posts/${displayData.id}`;
-  
+
     // Copy the post link to the clipboard
     navigator.clipboard.writeText(postLink);
   }, [displayData.id]);
-  
+
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
@@ -72,13 +71,13 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
 
   const onLike = useCallback(async (ev: any) => {
     ev.stopPropagation();
-  
+
     if (!currentUser) {
       return loginModal.onOpen();
     }
     toggleLike();
   }, [loginModal, currentUser, toggleLike]);
-  
+
 
   console.log('hasliked', hasLiked)
   const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
@@ -119,26 +118,26 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   }, [displayData.createdAt])
 
   return (
-    <div 
+    <div
       onClick={goToPost}
-      className={data.isCited === true && citedPost && citedPost.user ? 
+      className={data.isCited === true && citedPost && citedPost.user ?
         "border-b-[1px] border-neutral-800 p-5 pt-2 cursor-pointer hover:bg-neutral-900 transition"
         :
         " border-b-[1px] border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition"
       }>
-    {data.isCited === true && citedPost && citedPost.user && (
-      <div className="mt-0flex flex-row flex-wrap">
-        <span onClick={goToCitationUser} className="text-neutral-500 text-sm w-full flex flex-row gap-2 ml-10 hover:underline">
-          <FaRetweet/> {data.user.name} retweeted
-        </span>
-      </div>
-    )}        
+      {data.isCited === true && citedPost && citedPost.user && (
+        <div className="mt-0flex flex-row flex-wrap">
+          <span onClick={goToCitationUser} className="text-neutral-500 text-sm w-full flex flex-row gap-2 ml-10 hover:underline">
+            <FaRetweet /> {data.user.name} retweeted
+          </span>
+        </div>
+      )}
       <div className="flex flex-row items-start gap-3 w-full">
         <Avatar userId={displayData.user.id} />
         <div className='w-full'>
           <div className="flex flex-row items-center gap-2 w-full">
-            <p 
-              onClick={goToUser} 
+            <p
+              onClick={goToUser}
               className="
                 text-white 
                 font-semibold 
@@ -147,8 +146,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             ">
               {displayData.user.name}
             </p>
-            <span 
-              onClick={goToUser} 
+            <span
+              onClick={goToUser}
               className="
                 text-neutral-500
                 cursor-pointer
@@ -159,9 +158,9 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
               @{displayData.user.username}
             </span>
             <span className="text-neutral-500 text-sm">
-              {createdAt}
+              {createdAt} ago
             </span>
-            <div className='ml-auto '>
+            <div onClick={(event) => event.preventDefault()} className='ml-auto'>
               <PostItemDots data={displayData} userId={displayData.userId} />
             </div>
           </div>
@@ -169,7 +168,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             {displayData.body}
           </div>
           <div className="flex flex-row justify-between mt-3 gap-10">
-            <div 
+            <div
               onClick={goToPost}
               className="
                 flex 
@@ -241,7 +240,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             </div>
             <HoverCard>
               <HoverCardTrigger>
-              <div className="
+                <div className="
                 flex 
                 flex-row 
                 items-center 
@@ -251,13 +250,13 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 transition 
                 hover:text-blue-500
             ">
-              <BiShareAlt size={20} />
-            </div>
+                  <BiShareAlt size={20} />
+                </div>
               </HoverCardTrigger>
               <HoverCardContent className="text-neutral-500 bg-black">
                 <div onClick={(event) => event.preventDefault()} className="flex flex-row w-full">
                   <div onClick={copyLinkToPost} className='flex flex-row w-full gap-5' ><BiLink size={20} />
-                  <p>Copy link to post</p>
+                    <p>Copy link to post</p>
                   </div>
                 </div>
 
@@ -266,7 +265,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
           </div>
         </div>
       </div>
-      </div> 
+    </div>
   )
 }
 
