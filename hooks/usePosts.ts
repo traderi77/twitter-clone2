@@ -1,12 +1,12 @@
-import useSWR from 'swr';
-import fetcher from '@/libs/fetcher';
+import useSWR from "swr";
+import fetcher from "@/libs/fetcher";
 
 const usePosts = (
   userId?: string,
   fetchBookmarked?: boolean,
-  fetchLiked?: boolean, 
+  fetchLiked?: boolean
 ) => {
-  let url = '/api/posts';
+  let url = "/api/posts";
 
   if (userId) {
     url += `?userId=${userId}`;
@@ -20,7 +20,7 @@ const usePosts = (
       // Adjust the URL to include the fetchLiked parameter
       url += `&fetchLiked=true`;
     }
-  };
+  }
 
   const { data, error, isLoading, mutate } = useSWR(url, fetcher);
 
@@ -30,6 +30,6 @@ const usePosts = (
     isLoading,
     mutate,
   };
-}
+};
 
 export default usePosts;

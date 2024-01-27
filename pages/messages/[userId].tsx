@@ -16,9 +16,8 @@ const MessageView = () => {
       <div className="flex justify-center items-center h-full">
         <ClipLoader color="lightblue" size={80} />
       </div>
-    )
-  }
-  else {
+    );
+  } else {
     return (
       <div className="flex flex-col items-end">
         <h1 className="text-white self-start"> These are my messages </h1>
@@ -28,9 +27,8 @@ const MessageView = () => {
           <BiMessageAdd className="text-white" />
         </div>
       </div>
-    )
+    );
   }
-}
-
+};
 
 export default MessageView;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useCallback, useState } from "react";
-import { signIn } from 'next-auth/react';
+import { signIn } from "next-auth/react";
 
 import useLoginModal from "@/hooks/useLoginModal";
 import useRegisterModal from "@/hooks/useRegisterModal";
@@ -13,10 +13,10 @@ const RegisterModal = () => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,7 +24,7 @@ const RegisterModal = () => {
     if (isLoading) {
       return;
     }
-  
+
     registerModal.onClose();
     loginModal.onOpen();
   }, [loginModal, registerModal, isLoading]);
@@ -32,26 +32,26 @@ const RegisterModal = () => {
   const onSubmit = useCallback(async () => {
     try {
       setIsLoading(true);
-      
-      await axios.post('/api/register', {
+
+      await axios.post("/api/register", {
         email,
         password,
         username,
         name,
       });
 
-      setIsLoading(false)
+      setIsLoading(false);
 
-      toast.success('Account created.');
+      toast.success("Account created.");
 
-      signIn('credentials', {
+      signIn("credentials", {
         email,
         password,
       });
 
       registerModal.onClose();
     } catch (error) {
-      toast.error('Something went wrong');
+      toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -61,46 +61,50 @@ const RegisterModal = () => {
     <div className="flex flex-col gap-4">
       <Input
         disabled={isLoading}
-        placeholder="Email" 
-        value={email} 
-        onChange={(e) => setEmail(e.target.value)} 
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
-      <Input 
+      <Input
         disabled={isLoading}
-        placeholder="Name" 
-        value={name} 
-        onChange={(e) => setName(e.target.value)} 
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
       />
-      <Input 
+      <Input
         disabled={isLoading}
-        placeholder="Username" 
-        value={username} 
+        placeholder="Username"
+        value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-      <Input 
+      <Input
         disabled={isLoading}
-        placeholder="Password" 
-        type="password" 
-        value={password} 
+        placeholder="Password"
+        type="password"
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
     </div>
-  )
+  );
 
   const footerContent = (
     <div className="text-neutral-400 text-center mt-4">
-      <p>Already have an account?
-        <span 
-          onClick={onToggle} 
+      <p>
+        Already have an account?
+        <span
+          onClick={onToggle}
           className="
             text-white 
             cursor-pointer 
             hover:underline
           "
-          > Sign in</span>
+        >
+          {" "}
+          Sign in
+        </span>
       </p>
     </div>
-  )
+  );
 
   return (
     <Modal
@@ -114,6 +118,6 @@ const RegisterModal = () => {
       footer={footerContent}
     />
   );
-}
+};
 
 export default RegisterModal;

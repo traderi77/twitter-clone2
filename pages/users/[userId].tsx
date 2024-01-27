@@ -8,8 +8,6 @@ import Header from "@/components/Header";
 import UserBio from "@/components/users/UserBio";
 import UserHero from "@/components/users/UserHero";
 
-
-
 const UserView = () => {
   const router = useRouter();
   const { userId } = router.query;
@@ -21,7 +19,7 @@ const UserView = () => {
       <div className="flex justify-center items-center h-full">
         <ClipLoader color="lightblue" size={80} />
       </div>
-    )
+    );
   }
 
   return (
@@ -29,9 +27,13 @@ const UserView = () => {
       <Header showBackArrow label={fetchedUser?.name} />
       <UserHero userId={userId as string} />
       <UserBio userId={userId as string} />
-      <PostFeed userId={userId as string} fetchBookmarked={false} fetchLiked={false} />
+      <PostFeed
+        userId={userId as string}
+        fetchBookmarked={false}
+        fetchLiked={false}
+      />
     </>
-   );
-}
- 
+  );
+};
+
 export default UserView;

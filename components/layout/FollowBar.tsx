@@ -1,8 +1,8 @@
-import useUsers from '@/hooks/useUsers';
-import { useCallback } from 'react';
-import Avatar from '../Avatar';
-import { use } from 'react';
-import { useRouter } from 'next/router';
+import useUsers from "@/hooks/useUsers";
+import { useCallback } from "react";
+import Avatar from "../Avatar";
+import { use } from "react";
+import { useRouter } from "next/router";
 
 const FollowBar = () => {
   const router = useRouter();
@@ -17,7 +17,7 @@ const FollowBar = () => {
     const url = `/users/${userId}`;
 
     router.push(url);
-  }
+  };
 
   return (
     <div className="px-6 py-4 hidden lg:block">
@@ -25,7 +25,11 @@ const FollowBar = () => {
         <h2 className="text-white text-xl font-semibold">Who to follow</h2>
         <div className="flex flex-col gap-6 mt-4">
           {users.map((user: Record<string, any>) => (
-            <div key={user.id} onClick={() => onClick(user.id)}  className="flex flex-row gap-4 cursor-pointer">
+            <div
+              key={user.id}
+              onClick={() => onClick(user.id)}
+              className="flex flex-row gap-4 cursor-pointer"
+            >
               <Avatar userId={user.id} />
               <div className="flex flex-col">
                 <p className="text-white font-semibold text-sm">{user.name}</p>

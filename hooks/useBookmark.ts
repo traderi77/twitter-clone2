@@ -7,7 +7,13 @@ import useLoginModal from "./useLoginModal";
 import usePost from "./usePost";
 import usePosts from "./usePosts";
 
-const useBookmark = ({ postId, userId }: { postId: string, userId?: string }) => {
+const useBookmark = ({
+  postId,
+  userId,
+}: {
+  postId: string;
+  userId?: string;
+}) => {
   const { data: currentUser } = useCurrentUser();
   const { data: fetchedPost, mutate: mutateFetchedPost } = usePost(postId);
   const { mutate: mutateFetchedPosts } = usePosts(userId);
@@ -29,23 +35,29 @@ const useBookmark = ({ postId, userId }: { postId: string, userId?: string }) =>
       let request;
 
       if (hasBookmarked) {
-        request = () => axios.delete('/api/bookmark', { data: { postId } });
+        request = () => axios.delete("/api/bookmark", { data: { postId } });
       } else {
-        request = () => axios.post('/api/bookmark', { postId });
+        request = () => axios.post("/api/bookmark", { postId });
       }
 
       await request();
       mutateFetchedPost();
       mutateFetchedPosts();
-
     } catch (error) {
-      toast.error('Something went wrong');
+      toast.error("Something went wrong");
     }
-  }, [currentUser, hasBookmarked, postId, mutateFetchedPosts, mutateFetchedPost, loginModal]);
+  }, [
+    currentUser,
+    hasBookmarked,
+    postId,
+    mutateFetchedPosts,
+    mutateFetchedPost,
+    loginModal,
+  ]);
 
   return {
     hasBookmarked,
     toggleBookmark,
-  }
-}
+  };
+};
 export default useBookmark;

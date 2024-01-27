@@ -12,24 +12,24 @@ const LoginModal = () => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = useCallback(async () => {
     try {
       setIsLoading(true);
 
-      await signIn('credentials', {
+      await signIn("credentials", {
         email,
         password,
       });
 
-      toast.success('Logged in');
+      toast.success("Logged in");
 
       loginModal.onClose();
     } catch (error) {
-      toast.error('Something went wrong');
+      toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -38,40 +38,44 @@ const LoginModal = () => {
   const onToggle = useCallback(() => {
     loginModal.onClose();
     registerModal.onOpen();
-  }, [loginModal, registerModal])
+  }, [loginModal, registerModal]);
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
-      <Input 
+      <Input
         placeholder="Email"
         onChange={(e) => setEmail(e.target.value)}
         value={email}
-        disabled={isLoading}  
+        disabled={isLoading}
       />
-      <Input 
+      <Input
         placeholder="Password"
         type="password"
         onChange={(e) => setPassword(e.target.value)}
         value={password}
-        disabled={isLoading} 
+        disabled={isLoading}
       />
     </div>
-  )
+  );
 
   const footerContent = (
     <div className="text-neutral-400 text-center mt-4">
-      <p>First time using Twitter?
-        <span 
-          onClick={onToggle} 
+      <p>
+        First time using Twitter?
+        <span
+          onClick={onToggle}
           className="
             text-white 
             cursor-pointer 
             hover:underline
           "
-          > Create an account</span>
+        >
+          {" "}
+          Create an account
+        </span>
       </p>
     </div>
-  )
+  );
 
   return (
     <Modal
@@ -85,6 +89,6 @@ const LoginModal = () => {
       footer={footerContent}
     />
   );
-}
+};
 
 export default LoginModal;

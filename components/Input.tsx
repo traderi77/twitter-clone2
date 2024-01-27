@@ -7,10 +7,19 @@ interface InputProps {
   label?: string;
 }
 
-const Input: React.FC<InputProps> = ({ placeholder, value, type = "text", onChange, disabled, label }) => {
+const Input: React.FC<InputProps> = ({
+  placeholder,
+  value,
+  type = "text",
+  onChange,
+  disabled,
+  label,
+}) => {
   return (
     <div className="w-full">
-      {label && <p className="text-xl text-white font-semibold mb-2">{label}</p>}
+      {label && (
+        <p className="text-xl text-white font-semibold mb-2">{label}</p>
+      )}
       <input
         disabled={disabled}
         onChange={onChange}
@@ -36,7 +45,7 @@ const Input: React.FC<InputProps> = ({ placeholder, value, type = "text", onChan
         "
       />
     </div>
-   );
-}
- 
+  );
+};
+
 export default Input;
