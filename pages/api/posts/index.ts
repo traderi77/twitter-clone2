@@ -29,7 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       let posts;
 
-      console.log('were hereee', userId, fetchBookmarked, fetchLiked)
       if (userId && typeof userId === 'string') {
 
         if (fetchBookmarked === 'true') {

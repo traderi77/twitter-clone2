@@ -12,7 +12,6 @@ interface FormProps {
   }
   
 const PostModal = () => {
-    console.log('postmodal declaration')
     const postModal = usePostModal();
 
     const { data: currentUser } = useCurrentUser();

@@ -17,7 +17,6 @@ interface PostItemProps {
 }
 
 const PostItemDots: React.FC<PostItemProps> = ({ data = {}, userId }) => {
-
     const { data: currentUser } = useCurrentUser();
     const { data: fetchedUser } = useUser(userId);
     const { isFollowing, toggleFollow } = useFollow(userId);

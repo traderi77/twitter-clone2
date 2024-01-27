@@ -18,7 +18,6 @@ interface CommentItemProps {
 const CommentItem: React.FC<CommentItemProps> = ({ data = {}, userId }) => {
   const router = useRouter();
   const loginModal = useLoginModal();
-  console.log('THIS IS THE DATA', data.id, data.user.id, data.likedIds) 
   const { data: currentUser } = useCurrentUser();
   const { hasLiked, toggleLike } = useLike({ postId: data.id, userId});
   const { hasBookmarked, toggleBookmark } = useBookmark({ postId: data.id, userId});
@@ -104,7 +103,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {}, userId }) => {
               @{data.user.username}
             </span>
             <span className="text-neutral-500 text-sm">
-              {createdAt}
+              {createdAt} ago
             </span>
           </div>
           <div className="text-white mt-1">

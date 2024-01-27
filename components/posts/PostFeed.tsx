@@ -13,7 +13,6 @@ interface PostFeedProps {
 const PostFeed: React.FC<PostFeedProps> = ({ userId, fetchBookmarked, fetchLiked }) => {
   const { data: posts = [] } = usePosts(userId, fetchBookmarked, fetchLiked);
 
-
   return ( 
     <>
       {posts.map((post: Record<string, any>,) => (

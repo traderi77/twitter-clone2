@@ -8,7 +8,7 @@ import useLike from '@/hooks/useLike';
 import useBookmark from '@/hooks/useBookmark';
 import useCitation from '@/hooks/useCitation';
 import Avatar from '../Avatar';
-import { BiBookmark, BiBookmarks, BiLink, BiRepost, BiShare, BiShareAlt } from 'react-icons/bi';
+import { BiBookmark, BiLink, BiRepost, BiShareAlt } from 'react-icons/bi';
 import { FaRetweet } from 'react-icons/fa';
 import usePost from '@/hooks/usePost';
 import {
@@ -17,8 +17,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import PostItemDots from './PostItemDots';
-import { BookMarked, BookMarkedIcon, BookmarkCheck, BookmarkXIcon } from 'lucide-react';
-import { BsBookmark, BsBookmarksFill } from 'react-icons/bs';
+import { BsBookmarksFill } from 'react-icons/bs';
 
 
 
@@ -30,13 +29,14 @@ interface PostItemProps {
 const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   const router = useRouter();
   const loginModal = useLoginModal();
-
-  const { data: currentUser } = useCurrentUser();
-  const { hasLiked, toggleLike } = useLike({ postId: data.id, userId });
-  const { hasBookmarked, toggleBookmark } = useBookmark({ postId: data.id, userId });
-  const { hasCited, toggleCitation } = useCitation({ postId: data.id, userId });
+  
   const { data: citedPost } = usePost(data.citedId);
   const displayData = (data.isCited === true && citedPost && citedPost.user) ? citedPost : data;
+  
+  const { data: currentUser } = useCurrentUser();
+  const { hasLiked, toggleLike } = useLike({ postId: displayData.id, userId });
+  const { hasBookmarked, toggleBookmark } = useBookmark({ postId: displayData.id, userId });
+  const { hasCited, toggleCitation } = useCitation({ postId: displayData.id, userId });
 
   const commentsLength = displayData.comments.length || 0;
   const likedLength = displayData.likedIds.length || 0;
@@ -81,7 +81,6 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   }, [loginModal, currentUser, toggleLike]);
 
 
-  console.log('hasliked', hasLiked)
   const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart;
 
   const onCite = useCallback(async (ev: any) => {
@@ -163,7 +162,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
               {createdAt} ago
             </span>
             <div onClick={(event) => event.preventDefault()} className='ml-auto'>
-              <PostItemDots data={displayData} userId={displayData.userId} />
+              <PostItemDots data={(data.isCited === true && citedPost) ? citedPost : displayData} userId={displayData.user.id} />
             </div>
           </div>
           <div className="text-white mt-1 w-full">
@@ -200,8 +199,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 transition 
                 hover:text-blue-500
             ">
-              <CiteIcon className={hasCited ? 'text-blue-500 fill-blue-500': ''}  
-              size={24} />
+              <CiteIcon className={hasCited ? 'text-blue-500 fill-blue-500' : ''}
+                size={24} />
               <p>
                 {citedLength}
               </p>
@@ -236,8 +235,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 transition 
                 hover:text-blue-500
             ">
-              <BsBookmarksFill className={hasBookmarked ? 'text-blue-500 fill-blue-500': ''} 
-                  size={24} />
+              <BsBookmarksFill className={hasBookmarked ? 'text-blue-500 fill-blue-500' : ''}
+                size={24} />
               <p>
                 {bookmarkedLength}
               </p>
