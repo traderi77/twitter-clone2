@@ -8,7 +8,7 @@ import useLike from '@/hooks/useLike';
 import useBookmark from '@/hooks/useBookmark';
 import useCitation from '@/hooks/useCitation';
 import Avatar from '../Avatar';
-import { BiBookmark, BiLink, BiRepost, BiShare, BiShareAlt } from 'react-icons/bi';
+import { BiBookmark, BiBookmarks, BiLink, BiRepost, BiShare, BiShareAlt } from 'react-icons/bi';
 import { FaRetweet } from 'react-icons/fa';
 import usePost from '@/hooks/usePost';
 import {
@@ -17,6 +17,8 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import PostItemDots from './PostItemDots';
+import { BookMarked, BookMarkedIcon, BookmarkCheck, BookmarkXIcon } from 'lucide-react';
+import { BsBookmark, BsBookmarksFill } from 'react-icons/bs';
 
 
 
@@ -180,7 +182,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 transition 
                 hover:text-sky-500
             ">
-              <AiOutlineMessage size={20} />
+              <AiOutlineMessage size={24} />
               <p>
                 {commentsLength}
               </p>
@@ -198,7 +200,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 transition 
                 hover:text-blue-500
             ">
-              <CiteIcon color={hasCited ? 'blue' : ''} size={20} />
+              <CiteIcon className={hasCited ? 'text-blue-500 fill-blue-500': ''}  
+              size={24} />
               <p>
                 {citedLength}
               </p>
@@ -216,7 +219,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 transition 
                 hover:text-red-500
             ">
-              <LikeIcon color={hasLiked ? 'red' : ''} size={20} />
+              <LikeIcon color={hasLiked ? 'red' : ''} size={24} />
               <p>
                 {likedLength}
               </p>
@@ -233,7 +236,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 transition 
                 hover:text-blue-500
             ">
-              <BookmarkIcon color={hasBookmarked ? 'blue' : ''} size={20} />
+              <BsBookmarksFill className={hasBookmarked ? 'text-blue-500 fill-blue-500': ''} 
+                  size={24} />
               <p>
                 {bookmarkedLength}
               </p>
@@ -250,12 +254,12 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
                 transition 
                 hover:text-blue-500
             ">
-                  <BiShareAlt size={20} />
+                  <BiShareAlt size={24} />
                 </div>
               </HoverCardTrigger>
               <HoverCardContent className="text-neutral-500 bg-black">
                 <div onClick={(event) => event.preventDefault()} className="flex flex-row w-full">
-                  <div onClick={copyLinkToPost} className='flex flex-row w-full gap-5' ><BiLink size={20} />
+                  <div onClick={copyLinkToPost} className='flex flex-row w-full gap-5' ><BiLink size={24} />
                     <p>Copy link to post</p>
                   </div>
                 </div>

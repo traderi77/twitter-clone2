@@ -38,7 +38,6 @@ const useBookmark = ({ postId, userId }: { postId: string, userId?: string }) =>
       mutateFetchedPost();
       mutateFetchedPosts();
 
-      toast.success('Success');
     } catch (error) {
       toast.error('Something went wrong');
     }

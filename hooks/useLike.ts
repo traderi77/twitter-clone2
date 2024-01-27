@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useCallback, useMemo } from "react";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 import useCurrentUser from "./useCurrentUser";
 import useLoginModal from "./useLoginModal";
@@ -37,8 +37,6 @@ const useLike = ({ postId, userId }: { postId: string, userId?: string }) => {
       await request();
       mutateFetchedPost();
       mutateFetchedPosts();
-
-      toast.success('Success');
     } catch (error) {
       toast.error('Something went wrong');
     }
