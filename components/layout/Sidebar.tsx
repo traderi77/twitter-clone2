@@ -47,7 +47,7 @@ const Sidebar = () => {
     {
       icon: BiMessageDetail,
       label: "Messages",
-      href: `/messages/${currentUser?.id}`,
+      href: `/messages/`,
       auth: true,
     },
 

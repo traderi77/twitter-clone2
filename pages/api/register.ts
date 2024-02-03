@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { NextApiRequest, NextApiResponse } from "next";
-
+import { setRedis } from "@/libs/helpers/redis";
 import prisma from "@/libs/prismadb";
 
 export default async function handler(
@@ -24,6 +24,10 @@ export default async function handler(
         hashedPassword,
       },
     });
+
+
+    await setRedis(`user:${user.id}`, email, username, user.id, name, hashedPassword);
+
 
     return res.status(200).json(user);
   } catch (error) {
