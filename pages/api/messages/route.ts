@@ -1,30 +1,32 @@
-import { fetchRedis } from '@/helpers/redis'
-import { authOptions } from '@/lib/auth'
+import { fetchRedis } from '@/libs/helpers/redis'
 import { db } from '@/lib/db'
 import { pusherServer } from '@/lib/pusher'
 import { toPusherKey } from '@/lib/utils'
 import { Message, messageValidator } from '@/lib/validations/message'
 import { nanoid } from 'nanoid'
 import { getServerSession } from 'next-auth'
+import useCurrentUser from '@/hooks/useCurrentUser'
 
 export async function POST(req: Request) {
+
   try {
     const { text, chatId }: { text: string; chatId: string } = await req.json()
-    const session = await getServerSession(authOptions)
+    const { data: currentUser }  = useCurrentUser()
 
-    if (!session) return new Response('Unauthorized', { status: 401 })
+
+    if (!currentUser) return new Response('Unauthorized', { status: 401 })
 
     const [userId1, userId2] = chatId.split('--')
 
-    if (session.user.id !== userId1 && session.user.id !== userId2) {
+    if (currentUser.id !== userId1 && currentUser.id !== userId2) {
       return new Response('Unauthorized', { status: 401 })
     }
 
-    const friendId = session.user.id === userId1 ? userId2 : userId1
+    const friendId = currentUser.id === userId1 ? userId2 : userId1
 
     const friendList = (await fetchRedis(
       'smembers',
-      `user:${session.user.id}:friends`
+      `user:${currentUser.id}:friends`
     )) as string[]
     const isFriend = friendList.includes(friendId)
 
@@ -34,7 +36,7 @@ export async function POST(req: Request) {
 
     const rawSender = (await fetchRedis(
       'get',
-      `user:${session.user.id}`
+      `user:${currentUser.id}`
     )) as string
     const sender = JSON.parse(rawSender) as User
 
@@ -42,7 +44,7 @@ export async function POST(req: Request) {
 
     const messageData: Message = {
       id: nanoid(),
-      senderId: session.user.id,
+      senderId: currentUser.id,
       text,
       timestamp,
     }
@@ -54,7 +56,6 @@ export async function POST(req: Request) {
 
     await pusherServer.trigger(toPusherKey(`user:${friendId}:chats`), 'new_message', {
       ...message,
-      senderImg: sender.image,
       senderName: sender.name
     })
 

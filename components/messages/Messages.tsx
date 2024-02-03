@@ -11,7 +11,6 @@ interface MessagesProps {
   initialMessages: Message[]
   sessionId: string
   chatId: string
-  sessionImg: string | null | undefined
   chatPartner: User
 }
 
@@ -20,7 +19,6 @@ const Messages: FC<MessagesProps> = ({
   sessionId,
   chatId,
   chatPartner,
-  sessionImg,
 }) => {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
 
@@ -99,15 +97,6 @@ const Messages: FC<MessagesProps> = ({
                   'order-1': !isCurrentUser,
                   invisible: hasNextMessageFromSameUser,
                 })}>
-                <Image
-                  fill
-                  src={
-                    isCurrentUser ? (sessionImg as string) : chatPartner.image
-                  }
-                  alt='Profile picture'
-                  referrerPolicy='no-referrer'
-                  className='rounded-full'
-                />
               </div>
             </div>
           </div>

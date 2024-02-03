@@ -27,27 +27,25 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   const addFriend = async (email: string) => {
     try {
       const validatedEmail = addFriendValidator.parse({ email })
-
-      await axios.post('/api/friends/add', {
+  
+      await axios.post('/api/messages/friends/add', {
         email: validatedEmail,
       })
-
+  
       setShowSuccessState(true)
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setError('email', { message: error.message })
-        return
+        const errorMessage = error.errors?.[0]?.message || 'Invalid request payload'
+        setError('email', { message: errorMessage })
+      } else if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data.message || 'Something went wrong.'
+        setError('email', { message: errorMessage })
+      } else {
+        setError('email', { message: 'Something went wrong.' })
       }
-
-      if (error instanceof AxiosError) {
-        setError('email', { message: error.response?.data })
-        return
-      }
-
-      setError('email', { message: 'Something went wrong.' })
     }
   }
-
+  
   const onSubmit = (data: FormData) => {
     addFriend(data.email)
   }

@@ -50,6 +50,19 @@ export const authOptions: AuthOptions = {
     secret: process.env.NEXTAUTH_JWT_SECRET,
   },
   secret: process.env.NEXTAUTH_SECRET,
+
+  callbacks: {
+
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id
+        session.user.name = token.name
+        session.user.email = token.email
+      }
+
+      return session
+    },
+  },
 };
 
 export default NextAuth(authOptions);

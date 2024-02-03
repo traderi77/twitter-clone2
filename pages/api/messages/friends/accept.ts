@@ -5,19 +5,25 @@ import { toPusherKey } from '@/lib/utils'
 import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 import useCurrentUser from '@/hooks/useCurrentUser'
+import { NextApiRequest, NextApiResponse} from 'next'
+import serverAuth from '@/libs/serverAuth'
 
+export default async function handler(
+  req: NextApiRequest, 
+  res: NextApiResponse
+  ) {
 
-export async function POST(req: Request) {
   try {
-    const body = await req.json()
-    const { data: currentUser } = useCurrentUser()
+    const body = await req.body
+    console.log('body', body)
+    const { currentUser } = await serverAuth(req, res);
 
 
     const { id: idToAdd } = z.object({ id: z.string() }).parse(body)
 
 
     if (!currentUser) {
-      return new Response('Unauthorized', { status: 401 })
+      return res.status(401).json({ message: 'Unauthorized' })
     }
 
     // verify both users are not already friends
@@ -28,7 +34,7 @@ export async function POST(req: Request) {
     )
 
     if (isAlreadyFriends) {
-      return new Response('Already friends', { status: 400 })
+      return res.status(400).json({ message: 'Already friends' })
     }
 
     const hasFriendRequest = await fetchRedis(
@@ -38,7 +44,7 @@ export async function POST(req: Request) {
     )
 
     if (!hasFriendRequest) {
-      return new Response('No friend request', { status: 400 })
+      return res.status(400).json({ message: 'No friend request' })
     }
 
     const [userRaw, friendRaw] = (await Promise.all([
@@ -67,14 +73,14 @@ export async function POST(req: Request) {
       db.srem(`user:${currentUser.id}:incoming_friend_requests`, idToAdd),
     ])
 
+    return res.status(200).json({ message: 'Friend added' })
     return new Response('OK')
   } catch (error) {
     console.log(error)
 
     if (error instanceof z.ZodError) {
-      return new Response('Invalid request payload', { status: 422 })
+      return res.status(422).json({ message: 'Invalid request payload' })
     }
-
-    return new Response('Invalid request', { status: 400 })
+    return res.status(400).json({ message: 'Invalid request' })
   }
 }
