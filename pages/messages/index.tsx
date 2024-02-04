@@ -15,6 +15,9 @@ import SidebarChatList from "@/components/messages/SidebarChatList";
 import FriendRequestSidebarOptions from "@/components/messages/FriendRequestSidebarOptions";
 
 import axios from "axios";
+import { last } from "lodash";
+import { I } from "@upstash/redis/zmscore-6fc3e57c";
+import { log } from "console";
 
 interface LayoutProps {
   children: ReactNode;
@@ -34,25 +37,63 @@ const Layout = () => {
   const [friends, setFriends] = useState([]);
   const [unseenRequestCount, setUnseenRequestCount] = useState(0);
 
-
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
         console.log("currentUser.id:", currentUser.id);
-
+        if (!currentUser.id) {
+          return;
+        }
+        
         // Fetch unseen request count
-        const response = await (axios.get(
+        const response = await axios.get(
           "/api/messages/friends/fetchRequests",
           {
             params: {
               userId: currentUser.id,
             },
           }
-        ))
+        );
 
-        const { data: dataconst } = response; 
-        const { body: unseenRequests } = dataconst; 
+        const { data: dataconst } = response;
+        const { body: unseenRequests } = dataconst;
+
+        const temp = await axios.get(
+          "/api/messages/friends/getFriendsByUserId",
+          {
+            params: {
+              userId: currentUser.id,
+            }
+          }
+        );
+
+        console.log("temp:", temp);
+
+        if (!friends) {
+          return;
+        }
+
+        console.log("friends:", friends);
+
+        // const friendsWithLastMessage = await Promise.all(
+        //   friends.map(async (friend) => {
+        //     const lastMessageRaw = await axios.get(
+        //       "/api/messages/message/fetch",
+        //       {
+        //         params: {
+        //           userId: currentUser.id,
+        //           friendId: friend.id,
+        //           range: 1,
+
+        //         },
+        //       }
+        //     )
+        //     return {
+        //       ...friend,
+        //       lastMessage,
+        //     };
+        //   })
+        // );
 
         console.log("unseenRequests:", unseenRequests);
         setUnseenRequestCount(unseenRequests.length);
@@ -65,7 +106,7 @@ const Layout = () => {
   }, [currentUser.id]);
 
   if (!unseenRequestCount || !currentUser.id) {
-    return ( <div>Loading</div>)
+    return <div>Loading</div>;
   }
 
   return (
