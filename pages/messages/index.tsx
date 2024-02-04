@@ -1,175 +1,142 @@
-// page.tsx
+// layout.tsx
 
+import { Icons } from "@/components/messages/Icons";
 import { getFriendsByUserId } from "@/libs/helpers/get-friends-by-user-id";
 import { fetchRedis } from "@/libs/helpers/redis";
-import { chatHrefConstructor } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
-import { getServerSession } from "next-auth";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import Layout from "./Layout"; // Import the Layout component
+import Link from "next/link";
+import SignOutButton from "@/components/messages/SignOutButton";
+import { ReactNode } from "react";
+import { SidebarOption } from "@/types/typings";
 import { useEffect, useState } from "react";
+import MobileChatLayout from "@/components/messages/MobileChatLayout";
+import SidebarChatList from "@/components/messages/SidebarChatList";
+import FriendRequestSidebarOptions from "@/components/messages/FriendRequestSidebarOptions";
 
+import axios from "axios";
 
-const Page = () => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const sidebarOptions: SidebarOption[] = [
+  {
+    id: 1,
+    name: "Add friend",
+    href: "/messages/add",
+    Icon: "UserPlus",
+  },
+];
+
+const Layout = () => {
   const { data: currentUser } = useCurrentUser();
-  const [friendsWithLastMessage, setFriendsWithLastMessage] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [unseenRequestCount, setUnseenRequestCount] = useState(0);
 
-  console.log('currentUser23948', currentUser);
 
+  
   useEffect(() => {
     const fetchData = async () => {
-      console.log('currentUser', currentUser);
+      try {
+        console.log("currentUser.id:", currentUser.id);
 
-      const friends = await FriendsByUserId(currentUser.id);
+        // Fetch unseen request count
+        const response = await (axios.get(
+          "/api/messages/friends/fetchRequests",
+          {
+            params: {
+              userId: currentUser.id,
+            },
+          }
+        ))
 
-      if (friends.length === 0) {
-        return;
+        const { data: dataconst } = response; 
+        const { body: unseenRequests } = dataconst; 
+
+        console.log("unseenRequests:", unseenRequests);
+        setUnseenRequestCount(unseenRequests.length);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-
-      const friendsWithLastMessage = await Promise.all(
-        friends.map(async (friend) => {
-          const [lastMessageRaw] = (await fetchRedis(
-            'zrange',
-            `chat:${chatHrefConstructor(currentUser.id, friend.id)}:messages`,
-            -1,
-            -1
-          )) as string[];
-
-          const lastMessage = JSON.parse(lastMessageRaw) as Message;
-
-          return {
-            ...friend,
-            lastMessage,
-          };
-        })
-      );
-
-      // Now you have friendsWithLastMessage ready for use
-      console.log('Friends with last message:', friendsWithLastMessage);
     };
 
     fetchData();
-  }, []); // The empty dependency array ensures this runs once when the component mounts
+  }, [currentUser.id]);
+
+  if (!unseenRequestCount || !currentUser.id) {
+    return ( <div>Loading</div>)
+  }
 
   return (
-    <div className="container py-12">
-      <h1 className="font-bold text-5xl mb-8">Recent chats</h1>
-      {friendsWithLastMessage.length === 0 ? (
-        <p className="text-sm text-zinc-500">Nothing to show here...</p>
-      ) : (
-        friendsWithLastMessage.map((friend) => (
-          <div
-            key={friend.id}
-            className="relative bg-zinc-50 border border-zinc-200 p-3 rounded-md"
-          >
-            <div className="absolute right-4 inset-y-0 flex items-center">
-              <ChevronRight className="h-7 w-7 text-zinc-400" />
-            </div>
+    <div className="w-full flex h-screen">
+      <div className="md:hidden">
+        <MobileChatLayout
+          friends={friends}
+          session={currentUser}
+          sidebarOptions={sidebarOptions}
+          unseenRequestCount={unseenRequestCount}
+        />
+      </div>
 
-            <Link
-              href={`/dashboard/chat/${chatHrefConstructor(
-                currentUser.id,
-                friend.id
-              )}`}
-              className="relative sm:flex"
-            >
-              <div className="mb-4 flex-shrink-0 sm:mb-0 sm:mr-4">
-                <div className="relative h-6 w-6">
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-lg font-semibold">{friend.name}</h4>
-                <p className="mt-1 max-w-md">
-                  <span className="text-zinc-400">
-                    {friend.lastMessage.senderId === currentUser.id
-                      ? "You: "
-                      : ""}
-                  </span>
-                  {friend.lastMessage.text}
-                </p>
-              </div>
-            </Link>
+      <div className="hidden md:flex h-full w-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+        {friends.length > 0 ? (
+          <div className="text-xs font-semibold leading-6 text-gray-400">
+            Your chats
           </div>
-        ))
-      )}
+        ) : null}
+
+        <nav className="flex flex-1 flex-col">
+          <ul role="list" className="flex flex-1 flex-col gap-y-7">
+            <li>
+              <SidebarChatList sessionId={currentUser.id} friends={friends} />
+            </li>
+            <li>
+              <div className="text-xs font-semibold leading-6 text-gray-400">
+                Overview
+              </div>
+
+              <ul role="list" className="-mx-2 mt-2 space-y-1">
+                {sidebarOptions.map((option) => {
+                  const Icon = Icons[option.Icon];
+                  return (
+                    <li key={option.id}>
+                      <Link
+                        href={option.href}
+                        className="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                      >
+                        <span className="text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white">
+                          <Icon className="h-4 w-4" />
+                        </span>
+
+                        <span className="truncate">{option.name}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+
+                <li>
+                  <FriendRequestSidebarOptions
+                    sessionId={currentUser.id}
+                    initialUnseenRequestCount={unseenRequestCount}
+                  />
+                </li>
+              </ul>
+            </li>
+
+            <li className="-mx-6 mt-auto flex items-center">
+              <div className="flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900">
+                <div className="relative h-8 w-8 bg-gray-50"></div>
+
+                <span className="sr-only">Your profile</span>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <aside className="max-h-screen container py-16 md:py-12 w-full"></aside>
     </div>
   );
 };
 
-export default Page;
-
-// const page = async ({}) => {
-//   const { data: currentUser } = useCurrentUser();
-//   if (!currentUser) notFound();
-
-//   const friends = await getFriendsByUserId(currentUser.id);
-
-//   const friendsWithLastMessage = await Promise.all(
-//     friends.map(async (friend) => {
-//       const [lastMessageRaw] = (await fetchRedis(
-//         "zrange",
-//         `chat:${chatHrefConstructor(currentUser.id, friend.id)}:messages`,
-//         -1,
-//         -1
-//       )) as string[];
-
-//       const lastMessage = JSON.parse(lastMessageRaw) as Message;
-
-//       return {
-//         ...friend,
-//         lastMessage,
-//       };
-//     })
-//   );
-
-//   return (
-//     <div className="container py-12">
-//       <h1 className="font-bold text-5xl mb-8">Recent chats</h1>
-//       {friendsWithLastMessage.length === 0 ? (
-//         <p className="text-sm text-zinc-500">Nothing to show here...</p>
-//       ) : (
-//         friendsWithLastMessage.map((friend) => (
-//           <div
-//             key={friend.id}
-//             className="relative bg-zinc-50 border border-zinc-200 p-3 rounded-md"
-//           >
-//             <div className="absolute right-4 inset-y-0 flex items-center">
-//               <ChevronRight className="h-7 w-7 text-zinc-400" />
-//             </div>
-
-//             <Link
-//               href={`/dashboard/chat/${chatHrefConstructor(
-//                 currentUser.id,
-//                 friend.id
-//               )}`}
-//               className="relative sm:flex"
-//             >
-//               <div className="mb-4 flex-shrink-0 sm:mb-0 sm:mr-4">
-//                 <div className="relative h-6 w-6">
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <h4 className="text-lg font-semibold">{friend.name}</h4>
-//                 <p className="mt-1 max-w-md">
-//                   <span className="text-zinc-400">
-//                     {friend.lastMessage.senderId === currentUser.id
-//                       ? "You: "
-//                       : ""}
-//                   </span>
-//                   {friend.lastMessage.text}
-//                 </p>
-//               </div>
-//             </Link>
-//           </div>
-//         ))
-//       )}
-//     </div>
-//   );
-// };
-
-// export default page;
+export default Layout;

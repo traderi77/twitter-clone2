@@ -25,8 +25,8 @@ export default async function handler(
       },
     });
 
-
     await setRedis(`user:${user.id}`, email, username, user.id, name, hashedPassword);
+    await setRedis(`user:email:${email}`, user.id);
 
 
     return res.status(200).json(user);

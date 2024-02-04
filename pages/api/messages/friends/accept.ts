@@ -14,13 +14,11 @@ export default async function handler(
   ) {
 
   try {
-    const body = await req.body
-    console.log('body', body)
+    const idToAdd = await req.body.id
+    console.log('body', idToAdd)
     const { currentUser } = await serverAuth(req, res);
 
-
-    const { id: idToAdd } = z.object({ id: z.string() }).parse(body)
-
+    console.log('currentUser', currentUser)
 
     if (!currentUser) {
       return res.status(401).json({ message: 'Unauthorized' })
@@ -47,10 +45,14 @@ export default async function handler(
       return res.status(400).json({ message: 'No friend request' })
     }
 
-    const [userRaw, friendRaw] = (await Promise.all([
-      fetchRedis('get', `user:${currentUser.id}`),
+    const [friendRaw, userRaw] = (await Promise.all([
       fetchRedis('get', `user:${idToAdd}`),
+      fetchRedis('get', `user:${currentUser.id}`),
     ])) as [string, string]
+
+
+    console.log('userRaw', userRaw)
+    console.log('friendRaw', friendRaw)
 
     const user = JSON.parse(userRaw) as User
     const friend = JSON.parse(friendRaw) as User

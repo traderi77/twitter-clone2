@@ -9,6 +9,8 @@ export async function fetchRedis(
 ) {
   const commandUrl = `${upstashRedisRestUrl}/${command}/${args.join("/")}`;
 
+  console.log("commandUrl", commandUrl);
+
   const response = await fetch(commandUrl, {
     headers: {
       Authorization: `Bearer ${authToken}`,
@@ -24,15 +26,21 @@ export async function fetchRedis(
   return data.result;
 }
 
-export async function setRedis(
-  key: string,
-  email: string,
-  username: string,
-  id: string,
-  name: string,
-  hashedPassword: string
-): Promise<void> {
+export async function setRedis(key: string, ...values: any[]): Promise<void> {
   const commandUrl = `${upstashRedisRestUrl}/set/${key}`;
+
+  const value =
+    values.length === 1
+      ? values[0]
+      : JSON.stringify({
+          data: {
+            email: values[0],
+            username: values[1],
+            id: values[2],
+            name: values[3],
+            hashedPassword: values[4],
+          },
+        });
 
   const response = await fetch(commandUrl, {
     method: "POST",
@@ -40,16 +48,7 @@ export async function setRedis(
       "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
     },
-
-    body: JSON.stringify({
-      value: {
-        email,
-        username,
-        id,
-        name,
-        hashedPassword,
-      },
-    }),
+    body: value,
 
     cache: "no-store",
   });

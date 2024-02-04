@@ -21,6 +21,14 @@ const FriendRequests: FC<FriendRequestsProps> = ({
     incomingFriendRequests
   )
 
+    // Use useEffect to update friendRequests when incomingFriendRequests changes
+    useEffect(() => {
+      setFriendRequests(incomingFriendRequests);
+    }, [incomingFriendRequests]);
+  
+
+  console.log(friendRequests, 'requester')
+
   useEffect(() => {
     pusherClient.subscribe(
       toPusherKey(`user:${sessionId}:incoming_friend_requests`)
@@ -29,10 +37,9 @@ const FriendRequests: FC<FriendRequestsProps> = ({
 
     const friendRequestHandler = ({
       senderId,
-      senderEmail,
     }: IncomingFriendRequest) => {
       console.log("function got called")
-      setFriendRequests((prev) => [...prev, { senderId, senderEmail }])
+      setFriendRequests((prev) => [...prev, { senderId }])
     }
 
     pusherClient.bind('incoming_friend_requests', friendRequestHandler)
@@ -46,7 +53,7 @@ const FriendRequests: FC<FriendRequestsProps> = ({
   }, [sessionId])
 
   const acceptFriend = async (senderId: string) => {
-    await axios.post('/api/friends/accept', { id: senderId })
+    await axios.post('/api/messages/friends/accept', { id: senderId })
 
     setFriendRequests((prev) =>
       prev.filter((request) => request.senderId !== senderId)
@@ -56,7 +63,7 @@ const FriendRequests: FC<FriendRequestsProps> = ({
   }
 
   const denyFriend = async (senderId: string) => {
-    await axios.post('/api/friends/deny', { id: senderId })
+    await axios.post('/api/messages/friends/deny', { id: senderId })
 
     setFriendRequests((prev) =>
       prev.filter((request) => request.senderId !== senderId)
@@ -65,6 +72,8 @@ const FriendRequests: FC<FriendRequestsProps> = ({
     router.refresh()
   }
 
+  console.log(friendRequests, 'frriedneds request')
+
   return (
     <>
       {friendRequests.length === 0 ? (
@@ -72,8 +81,8 @@ const FriendRequests: FC<FriendRequestsProps> = ({
       ) : (
         friendRequests.map((request) => (
           <div key={request.senderId} className='flex gap-4 items-center'>
-            <UserPlus className='text-black' />
-            <p className='font-medium text-lg'>{request.senderEmail}</p>
+            <UserPlus className='text-white' />
+            <div className='text-white'> {request.senderId} </div>
             <button
               onClick={() => acceptFriend(request.senderId)}
               aria-label='accept friend'

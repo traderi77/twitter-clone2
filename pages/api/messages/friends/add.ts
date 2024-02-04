@@ -8,29 +8,28 @@ import { getServerSession } from 'next-auth'
 import { z } from 'zod'
 import { NextApiRequest, NextApiResponse } from 'next'
 import serverAuth from '@/libs/serverAuth'
+import { id } from 'date-fns/locale';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log('req');
 
 
   try {
     const emailToAdd = req.body.email.email
-    console.log('body', emailToAdd); 
 
-    const idToAdd = (await fetchRedis(
+    const idToAdd = await fetchRedis(
       'get',
       `user:email:${emailToAdd}`
-    )) as string
+    ) as string
+
 
     if (!idToAdd) {
       return res.status(400).json({ message: 'This person does not exist.' })
     }
 
     const { currentUser } = await serverAuth(req, res);
-
 
 
     if (!currentUser) {

@@ -1,0 +1,3 @@
+interface IncomingFriendRequest {
+  senderId: string
+}
