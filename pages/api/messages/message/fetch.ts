@@ -9,24 +9,32 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
+    console.log(req.body, 'req.body')
     const { userId, friendId, range } = req.body;
 
+    // Check if any of the required parameters is undefined or empty string
+    if (!userId || !friendId || !range) {
+      return res.status(400).json({ message: "Missing required parameters." });
+    }
+
+    
     const [lastMessageRaw] = (await fetchRedis(
       "zrange",
       `chat:${chatHrefConstructor(userId, friendId)}:messages`,
       -range,
       -range,
-    )) as string[];
-
+      )) as string[];
+      
+      const { currentUser } = await serverAuth(req, res);
+  
+      if (!currentUser) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+  
     if (!lastMessageRaw) {
       return res.status(400).json({ message: "This person does not exist." });
     }
 
-    const { currentUser } = await serverAuth(req, res);
-
-    if (!currentUser) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
 
     return res.status(200).json({ message: "OK", body: lastMessageRaw });
   } catch (error) {
